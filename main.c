@@ -6,7 +6,7 @@
 /*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 22:10:00 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/01 23:00:58 by bootjan          ###   ########.fr       */
+/*   Updated: 2024/01/04 02:07:24 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,39 +41,107 @@ char	**load_map(void)
 	return (map);
 }
 
-mlx_t	*init_window_images(t_images **images, char **map, t_mapinfo map_info)
+t_info	*init_info(void)
 {
-	mlx_t	*window;
+	t_info	*info;
 
-	window = mlx_init(MAP_WIDTH, MAP_HEIGHT, "CUB3D...", true);
-	if (!window)
-	{
-		printf("Error\n"); // Better error messages
+	info = ft_calloc(1, sizeof(t_info));
+	if (!info)
 		return (NULL);
-	}
-	*images = load_images(window);
-	if (!*images)
+	info->posX = 2;
+	info->posY = 1;
+	info->dirX = 0;
+	info->dirY = 1;
+	info->planeX = 0;
+	info->planeY = 0.66;
+	return (info);
+}
+
+void	paint_line(int y, int yMax)
+{
+	// int	y;
+	// int	yMax;
+
+	// if (line->y0 < line->y1)
+	// {
+	// 	y = line->y0;
+	// 	yMax = line->y1;
+	// }
+	// else
+	// {
+	// 	y = line->y1;
+	// 	yMax = line->y0;
+	// }
+	if (y >= 0) // needed?
 	{
-		mlx_terminate(window);
-		printf("Error\n"); // Better error messages
-		return (NULL);
+		while (y < yMax)
+		{
+			mlx_put_pixel(rgbCode, line->x, y, rgbCode);
+			y++;
+		}
 	}
-	*coins_info = put_images_to_window(window, *images, map, map_info);
-	if (!*coins_info)
-	{
-		mlx_terminate(window);
-		free(*images);
-		printf("Error\n"); // Better error messages
-		return (NULL);
-	}
-	return (window);
+}
+
+// void	draw_line(t_info *info, t_raycast *raycast)
+// {
+// 	if (something)
+// 		paint_texture_line();
+// 	line->y0 = 0;
+// 	line->y1 = ray->drawStart;
+// 	paint_line(root, line, rgbCode);
+// 	line->y0 = WINDOW_HEIGHT;
+// 	line->y1 = ray->drawEnd;
+// 	paint_line(root, line, rgbCode);
+// }
+
+void	draw_line(t_line line)
+{
+	paint_line()
+}
+
+void	init_line(t_line *line, t_raycast raycast)
+{
+	line->lineHeight = (int)(WINDOW_HEIGHT / raycast.perpWallDist);
+	line->y0 = WINDOW_HEIGHT / 2 - line->lineHeight / 2;
+	if (line->y0 < 0)
+		line->y0 = 0;
+	line->y1 = WINDOW_HEIGHT / 2 + line->lineHeight / 2;
+	if (line->y1 >= WINDOW_HEIGHT)
+		line->y1 = WINDOW_HEIGHT - 1;
 }
 
 int	main(int argc, const char **argv)
 {
+	t_info	*info = init_info();
+	if (!info)
+		return (1);
 	char	**map = load_map();
 	if (!map)
-		return (1);
+		return (free(info), 1);
+	t_root *root = compute_root();
+	if (!root)
+		return (free(info), free_2d_array(&map), 1);
+	
+	double		cameraX;
+	double		perpWallDist;
+	double		wallX;
+	// double		scale;
+	t_raycast	raycast;
+
+	for (int i = 0; i < 60; i++)
+	{
+		raycast.cameraX = 2 * i / double(60) - 1;
+		look_for_wall(info, &raycast, map);
+		init_line(&line, raycast);
+		draw_line(info, raycast);
+		// if (raycast.side == WEST || raycast.side == EAST)
+		// 	wallX = info->posY + raycast.perpWallDist * raycast.rayDirY;
+		// else
+		// 	wallX = info->posX + raycast.perpWallDist * raycast.rayDirX;
+		// wallX -= floor(wallX); // find out what floor does
+		// scale = line->y - (WINDOW_HEIGHT) / 2 + raycast->lineHeigt
+		// paint_it()
+	}
 	open_window();
 	place_images();
 	return (free_2d_array(&map), 0);
