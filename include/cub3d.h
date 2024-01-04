@@ -6,7 +6,7 @@
 /*   By: bootjan <bootjan@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/01 22:10:19 by bootjan       #+#    #+#                 */
-/*   Updated: 2024/01/04 16:58:21 by bschaafs      ########   odam.nl         */
+/*   Updated: 2024/01/04 20:38:36 by bschaafs      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,19 @@
 # define WINDOW_WIDTH 1280
 # define IMAGE_SIZE 100
 
-# define PATH "textures/kchrosci.jpeg"
+# define PATH "texture/exit.png"
 
 # define CEILING 0
-# define WALL 16731469
 # define FLOOR 16777215
+# define TEX_WIDTH 64
 
 # define MOVE_SPEED 0.1
 # define ROT_SPEED 0.03
+
+# define NORTH 0
+# define SOUTH 1
+# define EAST 2
+# define WEST 3
 
 typedef struct s_info
 {
@@ -67,17 +72,26 @@ typedef struct s_raycast
 
 typedef struct s_line
 {
-	int	x;
-	int	y;
-	int	y0;
-	int	y1;
-	int	texX;
-	int	texY;
-	int	lineHeight;
+	int		x;
+	int		y;
+	int		y0;
+	int		y1;
+	int		texX;
+	int		texY;
+	int		lineHeight;
+	double	wallX;
 }	t_line;
 
 typedef struct s_root
 {
+	int			*noTexture;
+	int			*eaTexture;
+	int			*soTexture;
+	int			*weTexture;
+	int			colorNo;
+	int			colorEa;
+	int			colorSo;
+	int			colorWe;
 	mlx_t		*window;
 	mlx_image_t	*image;
 	int			imageIndex;
@@ -88,6 +102,7 @@ typedef struct s_root
 
 t_root	*compute_root(void);
 void	look_for_wall(t_info *info, t_raycast *raycast, char **map);
+int		compute_color(int r, int g, int b, int a);
 
 // ### MOVE PLAYER #############################################################
 void	move_player(void *arg);
@@ -95,7 +110,7 @@ void	turn_left(t_info *info);
 void	turn_right(t_info *info);
 
 // ### DRAW LINE ###############################################################
-void	init_line(t_line *line, t_raycast *raycast, int x);
+void	init_line(t_line *line, t_raycast *raycast, t_info *info, int x);
 void	draw_line(t_root *root, t_line *line, int side);
 
 #endif

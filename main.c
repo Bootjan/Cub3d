@@ -6,7 +6,7 @@
 /*   By: bootjan <bootjan@student.42.fr>              +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/01 22:10:00 by bootjan       #+#    #+#                 */
-/*   Updated: 2024/01/04 16:56:13 by bschaafs      ########   odam.nl         */
+/*   Updated: 2024/01/04 19:01:05 by bschaafs      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	generate_view(void *arg)
 	{
 		root->raycast->cameraX = 2 * x / (double)WINDOW_WIDTH - 1;
 		look_for_wall(root->info, root->raycast, root->map);
-		init_line(&line, root->raycast, x);
+		init_line(&line, root->raycast, root->info, x);
 		draw_line(root, &line, root->raycast->side);
 	}
 }
@@ -104,5 +104,8 @@ int	main(void) //int argc, const char **argv)
 	mlx_loop_hook(root->window, move_player, (void *)root);
 	mlx_loop(root->window);
 	mlx_terminate(root->window);
+	free(root->info);
+	free(raycast);
+	free(root);
 	return (free_2d_array(&map), 0);
 }
