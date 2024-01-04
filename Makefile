@@ -1,5 +1,5 @@
 MAIN = main.c
-# FILES = handling_args.c utils.c life_of_philo.c thread_utils.c stop_threads.c have_diner.c
+FILES = dda.c init_mlx.c move_player.c turn_player.c draw_line.c
 
 SRCS = $(MAIN)\
 $(FILES)
@@ -8,8 +8,7 @@ OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)
 NAME = cub3d
 VPATH = . src
 
-I_DIRS := $(shell find . -type f -name "*.h" -exec dirname {} + | uniq)
-INCLUDE = $(I_DIRS:%=-I%)
+INCLUDE = -I./include -I./MLX42/include
 
 MLX42 = build/libmlx42.a -Iinclude -lglfw -L"/opt/homebrew/Cellar/glfw/3.3.9/lib/"
 MLX42_DIR = MLX42
@@ -17,7 +16,7 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=address -g
+CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g
 OBJS_DIR = ./objs
 
 RM = rm -rf

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   dda.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/04 00:18:49 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/04 01:53:42 by bootjan          ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   dda.c                                              :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: bootjan <bootjan@student.42.fr>              +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/01/04 00:18:49 by bootjan       #+#    #+#                 */
+/*   Updated: 2024/01/04 17:37:57 by bschaafs      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ double	ft_abs_double(double x)
 	return (x);
 }
 
-double	computeSideDistX(double rayDirX, t_raycast *raycast, t_info *info)
+double	computeSideDistX(t_raycast *raycast, t_info *info)
 {
-	if (rayDirX < 0)
+	if (raycast->rayDirX < 0)
 	{
 		raycast->stepX = -1;
 		return ((info->posX - raycast->mapX) * raycast->deltaDistX);
@@ -30,9 +30,9 @@ double	computeSideDistX(double rayDirX, t_raycast *raycast, t_info *info)
 	return ((raycast->mapX + 1.0 - info->posX) * raycast->deltaDistX);
 }
 
-double	computeSideDistY(double rayDirY, t_raycast *raycast, t_info *info)
+double	computeSideDistY(t_raycast *raycast, t_info *info)
 {
-	if (rayDirY < 0)
+	if (raycast->rayDirY < 0)
 	{
 		raycast->stepY = -1;
 		return ((info->posY - raycast->mapY) * raycast->deltaDistY);
@@ -59,7 +59,7 @@ int	dda(t_raycast *raycast, char **map)
 			raycast->mapY += raycast->stepY;
 			side = 1;
 		}
-		if (map[raycast->mapX][raycast->mapY] == 1)
+		if (map[raycast->mapY][raycast->mapX] == '1')
 			break ;
 	}
 	return (side);
@@ -71,10 +71,16 @@ void	look_for_wall(t_info *info, t_raycast *raycast, char **map)
 	raycast->rayDirY = info->dirY + info->planeY * raycast->cameraX;
 	raycast->mapX = (int)info->posX;
 	raycast->mapY = (int)info->posY;
-	raycast->deltaDistX = ft_abs_double(1 / raycast->rayDirX);
-	raycast->deltaDistY = ft_abs_double(1 / raycast->rayDirY);
-	raycast->sideDistX = computeSideDistX(rayDirX, raycast, info);
-	raycast->sideDistY = computeSideDistY(rayDirY, raycast, info);
+	if (raycast->rayDirX == 0)
+		raycast->deltaDistX = 1e30;
+	else	
+		raycast->deltaDistX = ft_abs_double(1 / raycast->rayDirX);
+	if (raycast->rayDirY == 0)
+		raycast->deltaDistY = 1e30;
+	else	
+		raycast->deltaDistY = ft_abs_double(1 / raycast->rayDirY);
+	raycast->sideDistX = computeSideDistX(raycast, info);
+	raycast->sideDistY = computeSideDistY(raycast, info);
 	raycast->side = dda(raycast, map);
 	if (raycast->side == 0)
 		raycast->perpWallDist = raycast->sideDistX - raycast->deltaDistX;

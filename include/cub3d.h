@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/01 22:10:19 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/04 02:10:46 by bootjan          ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   cub3d.h                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: bootjan <bootjan@student.42.fr>              +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/01/01 22:10:19 by bootjan       #+#    #+#                 */
+/*   Updated: 2024/01/04 16:58:21 by bschaafs      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,25 @@
 # include <stdio.h>
 # include <fcntl.h>
 # include <stdbool.h>
+# include <math.h>
 # include "libft.h"
 # include "get_next_line.h"
 # include "ft_printf.h"
 # include "MLX42.h"
 # include "MLX42_Int.h"
 
-# define WINDOW_HEIGHT 500
-# define WINDOW_WIDTH 500
+# define WINDOW_HEIGHT 960
+# define WINDOW_WIDTH 1280
 # define IMAGE_SIZE 100
 
 # define PATH "textures/kchrosci.jpeg"
 
-typedef struct s_root
-{
-	mlx_t		*window;
-	mlx_image_t	*image;
-	// mlx_image_t	*no_image;
-	// mlx_image_t	*ea_image;
-	// mlx_image_t	*so_image;
-	// mlx_image_t	*we_image;
-}	t_root;
+# define CEILING 0
+# define WALL 16731469
+# define FLOOR 16777215
+
+# define MOVE_SPEED 0.1
+# define ROT_SPEED 0.03
 
 typedef struct s_info
 {
@@ -77,5 +75,27 @@ typedef struct s_line
 	int	texY;
 	int	lineHeight;
 }	t_line;
+
+typedef struct s_root
+{
+	mlx_t		*window;
+	mlx_image_t	*image;
+	int			imageIndex;
+	t_info		*info;
+	t_raycast	*raycast;
+	char		**map;
+}	t_root;
+
+t_root	*compute_root(void);
+void	look_for_wall(t_info *info, t_raycast *raycast, char **map);
+
+// ### MOVE PLAYER #############################################################
+void	move_player(void *arg);
+void	turn_left(t_info *info);
+void	turn_right(t_info *info);
+
+// ### DRAW LINE ###############################################################
+void	init_line(t_line *line, t_raycast *raycast, int x);
+void	draw_line(t_root *root, t_line *line, int side);
 
 #endif

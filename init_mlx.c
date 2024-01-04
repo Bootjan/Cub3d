@@ -1,51 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   init_mlx.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/04 01:07:37 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/04 02:14:29 by bootjan          ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   init_mlx.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: bootjan <bootjan@student.42.fr>              +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/01/04 01:07:37 by bootjan       #+#    #+#                 */
+/*   Updated: 2024/01/04 14:55:59 by bschaafs      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-mlx_image_t	*load_image(mlx_t *window, const char *path, int *error_flag)
-{
-	mlx_image_t		*image;
-	mlx_texture_t	*texture;
+// mlx_image_t	*load_image(mlx_t *window, const char *path, int *error_flag)
+// {
+// 	mlx_image_t		*image;
+// 	mlx_texture_t	*texture;
 
-	if (*error_flag != 0)
-		return (NULL);
-	texture = mlx_load_png(path);
-	if (!texture)
-		return (*error_flag = 1, NULL);
-	image = mlx_texture_to_image(root->window, texture);
-	mlx_delete_texture(texture);
-	if (!image)
-		return (*error_flag = 1, NULL);
-	if (!mlx_resize_image(image, IMAGE_SIZE, IMAGE_SIZE))
-		return (*error_flag = 1, NULL);
-	return (image);
-}
+// 	if (*error_flag != 0)
+// 		return (NULL);
+// 	texture = mlx_load_png(path);
+// 	if (!texture)
+// 		return (*error_flag = 1, NULL);
+// 	image = mlx_texture_to_image(root->window, texture);
+// 	mlx_delete_texture(texture);
+// 	if (!image)
+// 		return (*error_flag = 1, NULL);
+// 	if (!mlx_resize_image(image, IMAGE_SIZE, IMAGE_SIZE))
+// 		return (*error_flag = 1, NULL);
+// 	return (image);
+// }
 
-int	load_images(t_root *root)
-{
-	int	error_flag;
+// int	load_images(t_root *root)
+// {
+// 	int	error_flag;
 
-	error_flag = 0;
-	root->no_image = load_image(root->window, PATH, &error_flag);
-	root->ea_image = load_image(root->window, PATH, &error_flag);
-	root->so_image = load_image(root->window, PATH, &error_flag);
-	root->we_image = load_image(root->window, PATH, &error_flag);
-	if (error_flag != 0)
-		return (-1);
-	return (0);
-}
+// 	error_flag = 0;
+// 	root->no_image = load_image(root->window, PATH, &error_flag);
+// 	root->ea_image = load_image(root->window, PATH, &error_flag);
+// 	root->so_image = load_image(root->window, PATH, &error_flag);
+// 	root->we_image = load_image(root->window, PATH, &error_flag);
+// 	if (error_flag != 0)
+// 		return (-1);
+// 	return (0);
+// }
 
-mlx_t	*compute_root(void)
+t_root	*compute_root(void)
 {
 	t_root	*root;
 
