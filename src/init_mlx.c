@@ -6,7 +6,7 @@
 /*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 01:07:37 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/05 23:51:36 by bootjan          ###   ########.fr       */
+/*   Updated: 2024/01/06 00:25:39 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ int	load_textures(t_root *root)
 
 	error_flag = 0;
 	root->noTexture = load_pixels(root->window, PATH2, &error_flag);
-	root->soTexture = load_pixels(root->window, PATH2, &error_flag);
-	root->eaTexture = load_pixels(root->window, PATH, &error_flag);
+	root->soTexture = load_pixels(root->window, PATH, &error_flag);
+	root->eaTexture = load_pixels(root->window, PATH4, &error_flag);
 	root->weTexture = load_pixels(root->window, PATH3, &error_flag);
 	if (error_flag != 0)
 		return (-1);

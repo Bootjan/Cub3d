@@ -6,7 +6,7 @@
 /*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 22:10:19 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/05 23:51:16 by bootjan          ###   ########.fr       */
+/*   Updated: 2024/01/06 00:25:06 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@
 # define PATH "texture/kchrosci.png"
 # define PATH2 "texture/polish_flag.png"
 # define PATH3 "texture/playboy.png"
+# define PATH4 "texture/safoh.png"
 
-# define TEX_SIZE 128
+# define TEX_SIZE 512
 # define MOVE_SPEED 0.1
 # define ROT_SPEED 0.03
 
