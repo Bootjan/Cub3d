@@ -6,7 +6,7 @@
 /*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 01:07:37 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/05 00:20:44 by bootjan          ###   ########.fr       */
+/*   Updated: 2024/01/05 23:35:48 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@ int	*convert_pixels(uint8_t *pixels)
 	int			*newPixels;
 
 	i= 0;
-	newPixels = ft_calloc(TEX_WIDTH * TEX_WIDTH, sizeof(int));
+	newPixels = ft_calloc(TEX_SIZE * TEX_SIZE, sizeof(int));
 	if (!newPixels)
 		return (NULL);
-	while (i < TEX_WIDTH * TEX_WIDTH)
+	while (i < TEX_SIZE * TEX_SIZE)
 	{
-		newPixels[i] = compute_color(pixels[4 * i], pixels[4 * i + 1], pixels[4 * i + 2], pixels[4 * i + 3]);
+		newPixels[i] = compute_color(pixels[4 * i], pixels[4 * i + 1], \
+		pixels[4 * i + 2], pixels[4 * i + 3]);
 		i++;
 	}
 	return (newPixels);
@@ -49,7 +50,7 @@ int	*load_pixels(mlx_t *window, const char *path, int *error_flag)
 	mlx_delete_texture(texture);
 	if (!image)
 		return (*error_flag = 1, NULL);
-	if (!mlx_resize_image(image, TEX_WIDTH, TEX_WIDTH))
+	if (!mlx_resize_image(image, TEX_SIZE, TEX_SIZE))
 		return (*error_flag = 1, NULL);
 	pixels = convert_pixels(image->pixels);
 	if (!pixels)
@@ -62,8 +63,8 @@ int	load_textures(t_root *root)
 	int			error_flag;
 
 	error_flag = 0;
-	root->noTexture = load_pixels(root->window, PATH, &error_flag);
-	root->soTexture = load_pixels(root->window, PATH, &error_flag);
+	root->noTexture = load_pixels(root->window, PATH2, &error_flag);
+	root->soTexture = load_pixels(root->window, PATH2, &error_flag);
 	root->eaTexture = load_pixels(root->window, PATH, &error_flag);
 	root->weTexture = load_pixels(root->window, PATH, &error_flag);
 	if (error_flag != 0)
@@ -89,11 +90,7 @@ t_root	*compute_root(void)
 	root->imageIndex = mlx_image_to_window(root->window, root->image, 0, 0);
 	if (root->imageIndex == -1)
 		return (mlx_terminate(root->window), printf("Error\n"), free(root), NULL); // Better error messages
-	root->colorNo = compute_color(0, 255, 0, 255);
-	root->colorSo = compute_color(255, 255, 0, 255);
-	root->colorEa = compute_color(0, 0, 255, 255);
-	root->colorWe = compute_color(255, 0, 0, 255);
-	// if (load_images(root) != 0) // add different paths for images
-	// 	return (mlx_terminate(root->window), printf("Error\n"), free(root), NULL); // Better error messages
+	// root->color_ceil = compute_color(root->rgb_ceil[0], root->rgb_ceil[1], root->rgb_ceil[2], 255);
+	// root->color_floor = compute_color(root->rgb_floor[0], root->rgb_floor[1], root->rgb_floor[2], 255);
 	return (root);
 }

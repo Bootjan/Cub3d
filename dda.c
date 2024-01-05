@@ -6,7 +6,7 @@
 /*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 00:18:49 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/05 00:35:35 by bootjan          ###   ########.fr       */
+/*   Updated: 2024/01/05 23:42:31 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,30 +41,36 @@ double	computeSideDistY(t_raycast *raycast, t_info *info)
 	return ((raycast->mapY + 1.0 - info->posY) * raycast->deltaDistY);
 }
 
-int	dda(t_raycast *raycast, char **map)
+int	update_x_values(t_raycast *raycast)
 {
-	int	side;
+	raycast->sideDistX += raycast->deltaDistX;
+	raycast->mapX += raycast->stepX;
+	if (raycast->stepX < 0.0)
+		return (EAST);
+	else
+		return (WEST);
+}
+
+int		update_y_values(t_raycast *raycast)
+{
+	raycast->sideDistY += raycast->deltaDistY;
+	raycast->mapY += raycast->stepY;
+	if (raycast->stepY < 0.0)
+		return (NORTH);
+	else
+		return (SOUTH);
+}
+
+uint8_t	dda(t_raycast *raycast, char **map)
+{
+	uint8_t	side;
 
 	while (true)
 	{
 		if (raycast->sideDistX < raycast->sideDistY)
-		{
-			raycast->sideDistX += raycast->deltaDistX;
-			raycast->mapX += raycast->stepX;
-			if (raycast->stepX < 0.0)
-				side = EAST;
-			else
-				side = WEST;
-		}
+			side = update_x_values(raycast);
 		else
-		{
-			raycast->sideDistY += raycast->deltaDistY;
-			raycast->mapY += raycast->stepY;
-			if (raycast->stepY < 0.0)
-				side = NORTH;
-			else
-				side = SOUTH;
-		}
+			side = update_y_values(raycast);
 		if (map[raycast->mapY][raycast->mapX] == '1')
 			break ;
 	}

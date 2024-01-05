@@ -6,7 +6,7 @@
 /*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 22:10:19 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/04 23:14:46 by bootjan          ###   ########.fr       */
+/*   Updated: 2024/01/05 23:42:49 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,11 @@
 
 # define WINDOW_HEIGHT 960
 # define WINDOW_WIDTH 1280
-# define IMAGE_SIZE 100
 
-# define PATH "texture/exit.png"
+# define PATH "texture/kchrosci.png"
+# define PATH2 "texture/polish_flag.png"
 
-# define CEILING 0
-# define FLOOR 16777215
-# define TEX_WIDTH 64
-
+# define TEX_SIZE 128
 # define MOVE_SPEED 0.1
 # define ROT_SPEED 0.03
 
@@ -59,7 +56,7 @@ typedef struct s_raycast
 	int		mapY;
 	int		stepX;
 	int		stepY;
-	int		side;
+	uint8_t	side;
 	double	cameraX;
 	double	rayDirX;
 	double	rayDirY;
@@ -73,13 +70,12 @@ typedef struct s_raycast
 typedef struct s_line
 {
 	int		x;
-	int		y;
 	int		y0;
 	int		y1;
 	int		texX;
 	int		texY;
-	int		step;
 	int		lineHeight;
+	double	step;
 	double	wallX;
 	double	texPos;
 }	t_line;
@@ -90,10 +86,10 @@ typedef struct s_root
 	int			*eaTexture;
 	int			*soTexture;
 	int			*weTexture;
-	int			colorNo;
-	int			colorEa;
-	int			colorSo;
-	int			colorWe;
+	uint8_t		rgb_ceil[3];
+	uint8_t		rgb_floor[3];
+	int			color_ceil;
+	int			color_floor;
 	mlx_t		*window;
 	mlx_image_t	*image;
 	int			imageIndex;
@@ -113,6 +109,6 @@ void	turn_right(t_info *info);
 
 // ### DRAW LINE ###############################################################
 void	init_line(t_line *line, t_raycast *raycast, t_info *info, int x);
-void	draw_line(t_root *root, t_line *line, int side);
+void	draw_line(t_root *root, t_line *line, uint8_t side);
 
 #endif
