@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   dda.c                                              :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: bootjan <bootjan@student.42.fr>              +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/01/04 00:18:49 by bootjan       #+#    #+#                 */
-/*   Updated: 2024/01/04 20:42:51 by bschaafs      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   dda.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/04 00:18:49 by bootjan           #+#    #+#             */
+/*   Updated: 2024/01/05 00:35:35 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ void	look_for_wall(t_info *info, t_raycast *raycast, char **map)
 	raycast->sideDistX = computeSideDistX(raycast, info);
 	raycast->sideDistY = computeSideDistY(raycast, info);
 	raycast->side = dda(raycast, map);
-	if (raycast->side > SOUTH)
-		raycast->perpWallDist = raycast->sideDistX - raycast->deltaDistX;
-	else
+	if (raycast->side <= SOUTH)
 		raycast->perpWallDist = raycast->sideDistY - raycast->deltaDistY;
+	else
+		raycast->perpWallDist = raycast->sideDistX - raycast->deltaDistX;
 }

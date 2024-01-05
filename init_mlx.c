@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   init_mlx.c                                         :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: bootjan <bootjan@student.42.fr>              +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/01/04 01:07:37 by bootjan       #+#    #+#                 */
-/*   Updated: 2024/01/04 20:35:13 by bschaafs      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   init_mlx.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/04 01:07:37 by bootjan           #+#    #+#             */
+/*   Updated: 2024/01/05 00:20:44 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	*convert_pixels(uint8_t *pixels)
 		return (NULL);
 	while (i < TEX_WIDTH * TEX_WIDTH)
 	{
-		newPixels[i] = compute_color(pixels[4 * i], pixels[4 * i + 1], pixels[4 * i + 2], 100);
+		newPixels[i] = compute_color(pixels[4 * i], pixels[4 * i + 1], pixels[4 * i + 2], pixels[4 * i + 3]);
 		i++;
 	}
 	return (newPixels);
