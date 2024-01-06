@@ -1,8 +1,9 @@
 MAIN = main.c
-FILES = dda.c init_mlx.c move_player.c turn_player.c draw_line.c
+VISUALS = dda.c init_mlx.c move_player.c turn_player.c \
+draw_line.c init_line.c generate_view.c utils.c init_info.c error_handling.c
 
 SRCS = $(MAIN)\
-$(FILES)
+$(VISUALS)
 
 OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)
 NAME = cub3d

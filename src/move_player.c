@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   move_player.c                                      :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: bschaafs <bschaafs@student.codam.nl>         +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2024/01/04 16:54:40 by bschaafs      #+#    #+#                 */
-/*   Updated: 2024/01/04 17:37:50 by bschaafs      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   move_player.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/04 16:54:40 by bschaafs          #+#    #+#             */
+/*   Updated: 2024/01/06 17:20:35 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,34 @@
 
 static void	move_forward(t_info *info, char **map)
 {
-	if (map[(int)info->posY][(int)(info->posX + info->dirX * MOVE_SPEED)] == '0')
-		info->posX += info->dirX * MOVE_SPEED;
-	if (map[(int)(info->posY + info->dirY * MOVE_SPEED)][(int)info->posX])
-		info->posY += info->dirY * MOVE_SPEED;
+	if (valid_move(map, info, 0, info->dir_x * MOVE_SPEED))
+		info->pos_x += info->dir_x * MOVE_SPEED;
+	if (valid_move(map, info, info->dir_y * MOVE_SPEED, 0))
+		info->pos_y += info->dir_y * MOVE_SPEED;
 }
 
 static void	move_backwards(t_info *info, char **map)
 {
-	if (map[(int)info->posY][(int)(info->posX - info->dirX * MOVE_SPEED)] == '0')
-		info->posX -= info->dirX * MOVE_SPEED;
-	if (map[(int)(info->posY - info->dirY * MOVE_SPEED)][(int)info->posX] == '0')
-		info->posY -= info->dirY * MOVE_SPEED;
+	if (valid_move(map, info, 0, -info->dir_x * MOVE_SPEED))
+		info->pos_x -= info->dir_x * MOVE_SPEED;
+	if (valid_move(map, info, -info->dir_y * MOVE_SPEED, 0))
+		info->pos_y -= info->dir_y * MOVE_SPEED;
 }
 
 static void	move_right(t_info *info, char **map)
 {
-	if (map[(int)info->posY][(int)(info->posX - info->dirY * MOVE_SPEED)] == '0')
-		info->posX -= info->dirY * MOVE_SPEED;
-	if (map[(int)(info->posY + info->dirX * MOVE_SPEED)][(int)info->posX] == '0')
-		info->posY += info->dirX * MOVE_SPEED;
+	if (valid_move(map, info, 0, -info->dir_y * MOVE_SPEED))
+		info->pos_x -= info->dir_y * MOVE_SPEED;
+	if (valid_move(map, info, info->dir_x * MOVE_SPEED, 0))
+		info->pos_y += info->dir_x * MOVE_SPEED;
 }
 
 static void	move_left(t_info *info, char **map)
 {
-	if (map[(int)(info->posY)][(int)(info->posX + info->dirY * MOVE_SPEED)] == '0')
-		info->posX += info->dirY * MOVE_SPEED;
-	if (map[(int)(info->posY - info->dirX * MOVE_SPEED)][(int)info->posX] == '0')
-		info->posY -= info->dirX * MOVE_SPEED;
+	if (valid_move(map, info, 0, info->dir_y * MOVE_SPEED))
+		info->pos_x += info->dir_y * MOVE_SPEED;
+	if (valid_move(map, info, -info->dir_x * MOVE_SPEED, 0))
+		info->pos_y -= info->dir_x * MOVE_SPEED;
 }
 
 void	move_player(void *arg)

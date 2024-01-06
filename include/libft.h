@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
-/*   libft.h                                            :+:    :+:            */
-/*                                                     +:+                    */
-/*   By: bschaafs <bschaafs@student.42.fr>            +#+                     */
-/*                                                   +#+                      */
-/*   Created: 2023/07/13 11:48:15 by bootjan       #+#    #+#                 */
-/*   Updated: 2023/12/13 12:32:37 by bschaafs      ########   odam.nl         */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/13 11:48:15 by bootjan           #+#    #+#             */
+/*   Updated: 2024/01/06 15:55:18 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,6 @@ int				ft_get_min(int *arr, int len);
 int				*ft_swap_list(int *arr, int x, int y);
 int				ft_ischar(char c);
 void			ft_free_str(char **str);
+void			ft_free_2d_array(void ***arr);
 
 #endif

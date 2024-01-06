@@ -6,22 +6,12 @@
 /*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 22:10:00 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/06 00:18:52 by bootjan          ###   ########.fr       */
+/*   Updated: 2024/01/06 17:27:11 by bootjan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	free_2d_array(char ***arr)
-{
-	int	i;
-
-	i = 0;
-	while ((*arr)[i])
-		free((*arr)[i++]);
-	free(*arr);
-	*arr = NULL;
-}
 
 char	**load_map(void)
 {
@@ -35,77 +25,61 @@ char	**load_map(void)
 	{
 		map[i] = get_next_line(fd);
 		if (!map[i])
-			return (free_2d_array(&map), close(fd), NULL);
+			return (ft_free_2d_array((void ***)&map), close(fd), NULL);
 	}
 	close(fd);
 	return (map);
 }
 
-t_info	*init_info(void)
-{
-	t_info	*info;
-
-	info = ft_calloc(1, sizeof(t_info));
-	if (!info)
-		return (NULL);
-	info->posX = 12;
-	info->posY = 12;
-	info->dirX = -1;
-	info->dirY = 0;
-	info->planeX = 0.0;
-	info->planeY = 0.0;
-	if (info->dirY > 0)
-		info->planeX = -0.66;
-	else if (info->dirY < 0)
-		info->planeX = 0.66;
-	else if (info->dirX > 0)
-		info->planeY = 0.66;
-	else if (info->dirX < 0)
-		info->planeY = -0.66;
-	return (info);
-}
-
-
-void	generate_view(void *arg)
+t_root	*init_root(void)
 {
 	t_root	*root;
-	t_line	line;
-
-	root = (t_root *)arg;
-	for (int x = 0; x < WINDOW_WIDTH; x++)
-	{
-		root->raycast->cameraX = 2 * x / (double)WINDOW_WIDTH - 1;
-		look_for_wall(root->info, root->raycast, root->map);
-		init_line(&line, root->raycast, root->info, x);
-		draw_line(root, &line, root->raycast->side);
-	}
+	
+	root = ft_calloc(1, sizeof(t_root));
+	if (!root)
+		return (NULL);
+	root->map = load_map();
+	if (!root->map)
+		return (free(root), NULL);
+	root->rgb_ceil[0] = 204;
+	root->rgb_ceil[1] = 153;
+	root->rgb_ceil[2] = 255;
+	root->rgb_floor[0] = 52;
+	root->rgb_floor[1] = 154;
+	root->rgb_floor[2] = 237;
+	root->no_path = PATH1;
+	root->ea_path = PATH2;
+	root->so_path = PATH3;
+	root->we_path = PATH4;
+	root->pos_x = 12;
+	root->pos_y = 12;
+	root->dir = 'E';
+	return (root);
 }
 
 int	main(void) //int argc, const char **argv)
 {
-	t_info	*info = init_info();
-	if (!info)
-		return (1);
-	char	**map = load_map();
-	if (!map)
-		return (free(info), 1);
-	t_root *root = compute_root();
+	t_root	*root = init_root();
 	if (!root)
-		return (free(info), free_2d_array(&map), 1);
+		return (1);
+	root = init_mlx(root);
+	if (!root)
+		return (1);
+	t_info	*info = init_info(root);
+	if (!info)
+		return (free_root(&root), 1);
+	root->info = info;
+	t_raycast	*raycast = ft_calloc(1, sizeof(t_raycast));
+	if (!raycast)
+		return (free_root(&root), 1);
+	root->raycast = raycast;
 	
-	t_raycast	*raycast;
-	raycast = ft_calloc(1, sizeof(t_raycast));
 	t_line		line;
 	ft_bzero(&line, sizeof(t_line));
-	root->info = info;
-	root->raycast = raycast;
-	root->map = map;
 	mlx_loop_hook(root->window, generate_view, (void *)root);
 	mlx_loop_hook(root->window, move_player, (void *)root);
 	mlx_loop(root->window);
 	mlx_terminate(root->window);
-	free(root->info);
-	free(raycast);
-	free(root);
-	return (free_2d_array(&map), 0);
+	free_root(&root);
+	return (0);
 }
