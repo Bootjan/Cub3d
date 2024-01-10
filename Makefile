@@ -1,61 +1,71 @@
-MAIN = main.c
-VISUALS = dda.c init_mlx.c move_player.c turn_player.c \
-draw_line.c init_line.c generate_view.c utils.c init_info.c error_handling.c
+include makerc/definitions.mk
 
-SRCS = $(MAIN)\
-$(VISUALS)
+all: build_dir $(NAME)
+.PHONY: all
 
-OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)
-NAME = cub3d
-VPATH = . src
+build_dir:
+	$(shell mkdir -p $(dir $(OBJS)))
+.PHONY: build_dir
 
-INCLUDE = -I./include -I./MLX42/include
+$(NAME): $(MLX42) $(LIBFT) $(BUILD_DIR) $(OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(MLX42) $(LIBFT) -o $(NAME)
 
-MLX42 = build/libmlx42.a -Iinclude -lglfw -L"/opt/homebrew/Cellar/glfw/3.3.9/lib/"
-MLX42_DIR = MLX42
-LIBFT_DIR = libft
-LIBFT = $(LIBFT_DIR)/libft.a
+-include $(DEPENDS)
 
-CC = cc
-CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g
-OBJS_DIR = ./objs
+$(BUILD_DIR):
+	@mkdir -p $(BUILD_DIR)
 
-RM = rm -rf
-
-all:	$(NAME)
-
-$(NAME): $(MLX42) $(LIBFT) $(OBJS_DIR) $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(MLX42) $(LIBFT) -o $(NAME)
-	@echo "$(NAME) made!"
-
-$(OBJS_DIR):
-	@mkdir -p $(OBJS_DIR)
-	@echo "./objs made!"
-
-$(OBJS_DIR)/%.o:	%.c
-	@$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) $(INCLUDE_FLAGS) -c $< -o $@
 
 $(MLX42):
-	@cmake $(MLX42_DIR) -B build
-	@cmake --build build
+	@cmake $(MLX42_DIR) -B $(MLX42_DIR)/build
+	@cmake --build $(MLX42_DIR)/build
 
 $(LIBFT):
-	@make -C $(LIBFT_DIR) all
+	@$(MAKE) -C $(LIBFT_DIR)
 
 clean:	
-	@$(RM) -r $(OBJS_DIR)
-	@make -C $(LIBFT_DIR) clean
-	@echo "$(NAME) objects removed!"
+	@$(RM) $(OBJS) $(DEPENDS)
+.PHONY: clean
 
 fclean: clean
 	@$(RM) $(NAME)
-	@echo "$(NAME) removed!"
-	@$(RM) $(OBJS_DIR)
-	@echo "./objs removed!"
-	@make -C $(LIBFT_DIR) fclean
-	@$(RM) build
+	@$(RM) $(BUILD_DIR)
+.PHONY: fclean
 
 re: fclean all
+.PHONY: re
 
-.PHONY: all clean re clean fclear
+clean_submodules: clean
+	@$(RM) $(MLX42_DIR)/build
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+.PHONY: clean_submodules
 
+debug:
+	@$(MAKE) DEBUG=1 LOG=1
+.PHONY: debug
+
+apple:
+	@$(MAKE) APPLE=1
+.PHONY: apple
+
+applebug:
+	@$(MAKE) APPLE=1 DEBUG=1
+.PHONY: applebug
+
+fsan:
+	@$(MAKE) FSAN=1 DEBUG=1 LOG=1
+.PHONY: fsan
+
+resan: fclean fsan
+.PHONY: resan
+
+rebug: fclean debug
+.PHONY: rebug
+
+reapple: fclean apple
+.PHONY: reapple
+
+reapplebug: fclean applebug
+.PHONY: reapplebug

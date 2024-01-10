@@ -1,85 +1,54 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bootjan <bootjan@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/01 22:10:00 by bootjan           #+#    #+#             */
-/*   Updated: 2024/01/06 17:27:11 by bootjan          ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   main.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: bschaafs <bschaafs@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/01/10 17:36:09 by bschaafs      #+#    #+#                 */
+/*   Updated: 2024/01/10 17:37:09 by bschaafs      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include "scene.h"
 
-
-char	**load_map(void)
+void	run_game(t_scene *scene)
 {
-	int		fd = open("maps/default.cub", O_RDONLY);
-	if (fd == -1)
-		return (NULL);
-	char	**map = ft_calloc(25, sizeof(char *));
-	if (!map)
-		return (close(fd), NULL);
-	for (int i = 0; i < 24; i++)
-	{
-		map[i] = get_next_line(fd);
-		if (!map[i])
-			return (ft_free_2d_array((void ***)&map), close(fd), NULL);
-	}
-	close(fd);
-	return (map);
-}
+	t_root	root;
+	t_info	*info;
+	t_line	line;
 
-t_root	*init_root(void)
-{
-	t_root	*root;
-	
-	root = ft_calloc(1, sizeof(t_root));
-	if (!root)
-		return (NULL);
-	root->map = load_map();
-	if (!root->map)
-		return (free(root), NULL);
-	root->rgb_ceil[0] = 204;
-	root->rgb_ceil[1] = 153;
-	root->rgb_ceil[2] = 255;
-	root->rgb_floor[0] = 52;
-	root->rgb_floor[1] = 154;
-	root->rgb_floor[2] = 237;
-	root->no_path = PATH1;
-	root->ea_path = PATH2;
-	root->so_path = PATH3;
-	root->we_path = PATH4;
-	root->pos_x = 12;
-	root->pos_y = 12;
-	root->dir = 'E';
-	return (root);
-}
-
-int	main(void) //int argc, const char **argv)
-{
-	t_root	*root = init_root();
-	if (!root)
-		return (1);
-	root = init_mlx(root);
-	if (!root)
-		return (1);
-	t_info	*info = init_info(root);
+	root = init_root(scene);
+	init_mlx(&root);
+	info = init_info(&root);
 	if (!info)
-		return (free_root(&root), 1);
-	root->info = info;
-	t_raycast	*raycast = ft_calloc(1, sizeof(t_raycast));
-	if (!raycast)
-		return (free_root(&root), 1);
-	root->raycast = raycast;
-	
-	t_line		line;
+		game_error_and_exit(&root, "Root initialization");
+	root.info = info;
+	root.raycast = ft_calloc(1, sizeof(t_raycast));
+	if (!root.raycast)
+		game_error_and_exit(&root, "Root initialization");
 	ft_bzero(&line, sizeof(t_line));
-	mlx_loop_hook(root->window, generate_view, (void *)root);
-	mlx_loop_hook(root->window, move_player, (void *)root);
-	mlx_loop(root->window);
-	mlx_terminate(root->window);
+	mlx_loop_hook(root.window, generate_view, (void *)&root);
+	mlx_loop_hook(root.window, move_player, (void *)&root);
+	mlx_loop(root.window);
+	mlx_terminate(root.window);
+	root.window = NULL;
 	free_root(&root);
-	return (0);
+}
+
+int	main(int argc, char *argv[])
+{
+	t_scene	scene;
+
+	if (argc != 2)
+		user_error_and_exit("Not enough arguments");
+	if (!is_cub_file(argv[1]))
+		user_error_and_exit("Not a .cub file");
+	scene = load_scene_from_file(argv[1]);
+	if (LOG)
+		print_scene(&scene);
+	run_game(&scene);
+	scene_clear(&scene);
+	return (EXIT_SUCCESS);
 }
